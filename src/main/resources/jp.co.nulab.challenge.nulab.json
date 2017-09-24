@@ -1,0 +1,6 @@
+{
+  "main": "jp.co.nulab.challenge.MainVerticle",
+  "options": {
+    "config": {}
+  }
+}

@@ -8,6 +8,14 @@ apply plugin: 'application'
 
 apply plugin: 'eclipse'
 
+
+def mainVerticle = "service:${group}.${project.name}"
+mainClassName = 'io.vertx.core.Launcher'
+applicationName = project.name
+
+def watchForChange = 'src/**/*'
+def doOnChange = './gradlew classes'
+
 repositories {
   mavenLocal()
   mavenCentral()
@@ -16,6 +24,12 @@ repositories {
 
 dependencies {
   compile "io.vertx:vertx-core:${vertxVersion}"
+  compile "io.vertx:vertx-web:${vertxVersion}"
+  compile "io.vertx:vertx-web-client:${vertxVersion}"
+  compile "io.vertx:vertx-auth-oauth2:${vertxVersion}"
+  compile "io.vertx:vertx-service-factory:${vertxVersion}"
+  compile 'oauth.signpost:signpost-core:1.2.1.2'
+  compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
   testCompile 'junit:junit:4.12'
   testCompile "io.vertx:vertx-unit:${vertxVersion}"
 }
@@ -31,6 +45,11 @@ eclipse {
     downloadJavadoc = true
   }
 }
+
+run {
+  args = [ 'run', mainVerticle, "--redeploy=${watchForChange}", "--on-redeploy=${doOnChange}", "--launcher-class=${mainClassName}" ]
+}
+
 
 task wrapper( type: Wrapper ) {
   gradleVersion = '4.2'
