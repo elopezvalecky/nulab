@@ -20,6 +20,7 @@ import oauth.signpost.exception.OAuthNotAuthorizedException;
 public class CacooAuthHandlerImpl extends AuthHandlerImpl implements CacooAuthHandler {
 	
 	private static String TOKEN = "token";
+	private static String REDIRECT_TO = "redirectTo";
 
 	private static Logger logger = LoggerFactory.getLogger(CacooAuthHandlerImpl.class);
 	
@@ -85,6 +86,8 @@ public class CacooAuthHandlerImpl extends AuthHandlerImpl implements CacooAuthHa
 		if (callback == null) {
 			throw new NullPointerException("callback is null");
 		}
+		
+		session.put(REDIRECT_TO, redirectURL);
 
 		final JsonObject params = new JsonObject().put("callbackUrl", host + callback.getPath());
 		return ((CacooAuthProvider) authProvider).authorizeURL(session, params);
@@ -118,6 +121,8 @@ public class CacooAuthHandlerImpl extends AuthHandlerImpl implements CacooAuthHa
 			Session session = ctx.session();
 			if (session != null) {
 				session.regenerateId();
+				
+				final String redirectTo = session.remove(REDIRECT_TO);
 
 				((CacooAuthProvider) authProvider).getToken(session, params.mergeIn(extraParams), res -> {
 					if (res.failed()) {
@@ -130,8 +135,8 @@ public class CacooAuthHandlerImpl extends AuthHandlerImpl implements CacooAuthHa
 							.putHeader("Cache-Control", "no-cache, no-store, must-revalidate")
 							.putHeader("Pragma", "no-cache").putHeader("Expires", "0")
 							// redirect
-							.putHeader("Location", "/").setStatusCode(302)
-							.end("Redirecting to /.");
+							.putHeader("Location", redirectTo).setStatusCode(302)
+							.end("Redirecting to "+redirectTo+".");
 						
 					}
 				});				

@@ -28,6 +28,7 @@ dependencies {
   compile "io.vertx:vertx-web-client:${vertxVersion}"
   compile "io.vertx:vertx-auth-oauth2:${vertxVersion}"
   compile "io.vertx:vertx-service-factory:${vertxVersion}"
+  compile "io.vertx:vertx-web-templ-handlebars:${vertxVersion}"
   compile 'oauth.signpost:signpost-core:1.2.1.2'
   compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
   testCompile 'junit:junit:4.12'
