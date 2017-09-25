@@ -14,7 +14,7 @@ mainClassName = 'io.vertx.core.Launcher'
 applicationName = project.name
 
 def watchForChange = 'src/**/*'
-def doOnChange = './gradlew classes'
+def doOnChange = './gradlew clean classes'
 
 repositories {
   mavenLocal()

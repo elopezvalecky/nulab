@@ -1,13 +1,20 @@
 package jp.co.nulab.challenge;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.AbstractUser;
 import io.vertx.ext.auth.AuthProvider;
-import io.vertx.ext.auth.User;
 
-public class CacooUser implements User, CacooAPI {
+public class CacooUser extends AbstractUser implements CacooAPI {
 
 	final JsonObject principal;
 	final OAuthToken token;
@@ -21,18 +28,6 @@ public class CacooUser implements User, CacooAPI {
 	}
 	
 	@Override
-	public User isAuthorised(String authority, Handler<AsyncResult<Boolean>> resultHandler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public User clearCache() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public JsonObject principal() {
 		return principal;
 	}
@@ -40,11 +35,73 @@ public class CacooUser implements User, CacooAPI {
 	@Override
 	public void setAuthProvider(AuthProvider authProvider) {
 		this.provider = (CacooAuthProvider) authProvider;
+		
 	}
 
 	@Override
-	public void getDiagrams(JsonObject params, Handler<AsyncResult<JsonObject>> handler) {
-		provider.api(HttpMethod.GET, "/api/v1/diagrams.json", params, token, handler);
+	protected void doIsPermitted(String permission, Handler<AsyncResult<Boolean>> resultHandler) {
+		// TODO to be implemented
+	}
+
+	@Override
+	public void getDiagrams(Integer offset, Integer limit, String type, String sortOn, String sortType, Integer folderId, Handler<AsyncResult<JsonObject>> handler) {
+		final Map<String,Object> params = new HashMap<String,Object>(6);
+		
+		params.put("offset", offset);
+		params.put("limit", limit);
+		params.put("type", type);
+		params.put("sortOn", sortOn);
+		params.put("sortType", sortType);
+		params.put("folderId", folderId);
+		
+		final List<String> queryString = params.entrySet().stream().filter(e -> { return e.getValue() != null; }).map( e -> { return e.getKey()+"="+e.getValue(); }).collect(Collectors.toList());
+		
+		final String endpoint = "/api/v1/diagrams.json?"+StringUtils.join(queryString, '&');
+		
+		provider.api(HttpMethod.GET, endpoint, null, token, handler);
+	}
+
+	@Override
+	public void getDiagram(String id, Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getFolders(Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createDiagram(Integer folderId, String title, String description, String security, Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveDiagram(Integer folderId, Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void copyDiagram(String originalDigramId, Integer folderId, String title, String description,
+			String security, Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteDiagram(String id, Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void editDiagram(String id, Handler<AsyncResult<JsonObject>> handler) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

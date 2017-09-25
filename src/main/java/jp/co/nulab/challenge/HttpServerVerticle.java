@@ -1,6 +1,7 @@
 package jp.co.nulab.challenge;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -59,12 +60,27 @@ public class HttpServerVerticle extends AbstractVerticle {
 	}
 
 	private void index(RoutingContext ctx) {
-		ctx.response().end("Welcome");
+		engine.render(ctx, "templates", "/index", template -> {
+			if (template.succeeded()) 
+				ctx.response().end(template.result());
+            else 
+            	ctx.fail(template.cause());				
+		});
 	}
 
 	private void listDiagrams(RoutingContext ctx) {
 		CacooUser user = (CacooUser) ctx.user();
-		user.getDiagrams(null, result -> {
+		
+		final MultiMap params = ctx.request().params();
+		
+		final Integer offset = params.contains("offset") ? Integer.parseInt(params.get("offset")) : 0;
+		final Integer limit = params.contains("limit") ? Integer.parseInt(params.get("limit")) : 10;
+		final String type = params.get("type");
+		final String sortOn = params.get("sortOn");
+		final String sortType = params.get("sortType");
+		final Integer folderId = params.contains("folderId") ? Integer.parseInt(params.get("folderId")) : null;
+		
+		user.getDiagrams(offset, limit, type, sortOn, sortType, folderId, result -> {
 			ctx.put("diagrams", result.result());
 			
 			engine.render(ctx, "templates", "/diagrams", template -> {
