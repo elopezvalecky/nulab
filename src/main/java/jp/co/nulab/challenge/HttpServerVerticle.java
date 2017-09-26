@@ -64,11 +64,12 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 		router.route().handler(cacooAuthHandler);
 		router.get("/diagrams").handler(this::listDiagrams);
+		router.post("/diagrams").handler(this::createDiagram);
 		router.get("/diagrams/:diagramId").handler(this::showDiagram);
 		router.get("/diagrams/:diagramId/edit").handler(this::editDiagram);
 		router.get("/diagrams/:diagramId/move").handler(this::moveDiagram);
 		router.get("/diagrams/:diagramId/copy").handler(this::copyDiagram);
-		router.delete("/diagrams/:diagramId").handler(this::deleteDiagram);
+		router.get("/diagrams/:diagramId/remove").handler(this::deleteDiagram);
 		
 		server
 			.requestHandler(router::accept)
@@ -118,6 +119,24 @@ public class HttpServerVerticle extends AbstractVerticle {
 	// Diagram Details page
 	private void showDiagram(RoutingContext ctx) {}
 	
+	// Diagram Details page
+	private void createDiagram(RoutingContext ctx) {
+		final CacooAPI api = (CacooAPI) ctx.user();
+
+		final String title = ctx.request().getParam("title");
+		final String description = ctx.request().getParam("description");
+
+		api.createDiagram(null, title, description, null, result -> {
+			if (result.succeeded())
+				ctx.response()
+					.setStatusCode(302)
+					.putHeader(HttpHeaders.LOCATION, "/diagrams")
+					.end();
+			else
+				ctx.fail(result.cause());
+		});
+	}
+
 	// Diagram edit action
 	private void editDiagram(RoutingContext ctx) {
 		try {
@@ -170,7 +189,20 @@ public class HttpServerVerticle extends AbstractVerticle {
 	}
 	
 	// Diagram delete action
-	private void deleteDiagram(RoutingContext ctx) {}
+	private void deleteDiagram(RoutingContext ctx) {
+		final CacooAPI api = (CacooAPI) ctx.user();
+		final String id = ctx.request().getParam("diagramId");
+		
+		api.deleteDiagram(id, result -> {
+			if (result.succeeded())
+				ctx.response()
+					.setStatusCode(302)
+					.putHeader(HttpHeaders.LOCATION, "/diagrams")
+					.end();
+			else
+				ctx.fail(result.cause());
+		});
+	}
 	
 	// Diagram move action
 	private void moveDiagram(RoutingContext ctx) {}

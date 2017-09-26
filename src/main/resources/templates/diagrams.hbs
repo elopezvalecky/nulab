@@ -18,6 +18,7 @@
       <div class="navbar navbar-dark bg-dark">
         <div class="container d-flex justify-content-between">
           <a href="#" class="navbar-brand">CacooUI</a>
+          <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDiagram">Create Diagram</button>
         </div>
       </div>
     </header>
@@ -42,10 +43,11 @@
 		    <a class="nav-link {{#if isRecyclebin}}active{{/if}}" href="/diagrams?type=recyclebin">Recycle Bin</a>
 		  </li>
 		</ul>    
+		
 	  <div class="row">
         {{#each diagrams.result}}
   		<div class="col-4">
-			<div class="card" style="width: 20rem;">
+			<div class="card text-center" style="width: 20rem;">
 			  <img class="card-img-top" style="background-image: url('{{imageUrl}}');">
 			  <div class="card-body">
 			  	{{#if folderName}}
@@ -63,11 +65,14 @@
 				    <a href="/diagrams/{{diagramId}}/copy" class="btn btn-outline-dark">
 				      <span class="oi oi-layers" title="copy" aria-hidden="true"></span>
 				    </a>
-				    <a href="#" class="btn btn-outline-dark">
+				    <a href="/diagrams/{{diagramId}}/remove" class="btn btn-outline-dark">
 				      <span class="oi oi-trash" title="remove" aria-hidden="true"></span>
 				    </a>
                 </div>
 			  </div>
+			  {{#if editing}}
+			  <div class="card-footer text-muted">editing</div>
+			  {{/if}}
 			</div>  		
   		</div>
   		{{else}}
@@ -76,6 +81,33 @@
 			</div>
         {{/each}}
 	  </div>    
+		<!-- Modal -->
+		<div class="modal fade" id="addDiagram" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <form action="/diagrams" method="post" class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Diagram</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="title">Title</label>
+				    <input id="title" type="text" class="form-control" name="title">
+				  </div>
+				  <div class="form-group">
+				    <label for="description">Description</label>
+				    <textarea id="description" class="form-control" name="description" rows="3"></textarea>
+				  </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-primary">Save</button>
+		      </div>
+		    </div>
+		  </form>
+		</div>	  
 	</main>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

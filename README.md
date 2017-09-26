@@ -4,31 +4,26 @@ Make a small application using our [Cacoo API](http://developer.nulab-inc.com/do
 It is a free style. You can make any application as long as the API is used in the application.
 However, please make sure to code server-side programs in java.
 
+
 ## Resources
 
 - Backend
+	- Java 8
 	- [Vert.x](http://vertx.io)
 	- [Signpost](https://github.com/mttkay/signpost) for OAuth 1.0a
 	
 - Frontend
 	- [Bootstrap](https://getbootstrap.com)
 
+
 ## How To Use
 To clone and run this application, you'll need Git and 
 
-1. 
-
-You must update a file `etc/config.json` and provide with your Cacoo consumer key and secret.
-
-2.
+1. You must update a file `etc/config.json` with your Cacoo consumer key and secret.
+2. Execute the command `./gradlew clean run` to run the app.
+3. Visit http://localhost:8080/ to access the webapp.
  
-```
-# Run the app
-$ ./gradlew clean run
-
-# Web should be accessible from http://localhost:8080/
-```
-
+ 
 ## TODO
 
 - Frontend
@@ -37,6 +32,8 @@ $ ./gradlew clean run
 	- Remove confirmation dialog
 	- Diagram details modal or screen
 	- filters (sort on, sort type, etc)
+	- Error page
 	
 - Backend
+	- Move diagram to folder
 	- Unit test

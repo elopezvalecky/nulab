@@ -74,8 +74,14 @@ public class CacooUser extends AbstractUser implements CacooAPI {
 
 	@Override
 	public void createDiagram(Integer folderId, String title, String description, String security, Handler<AsyncResult<JsonObject>> handler) {
-		// TODO Auto-generated method stub
+		final JsonObject params = new JsonObject();
 		
+		params.put("title", title);
+		params.put("description", description);
+		params.put("security", security);
+		params.put("folderId", folderId);		
+
+		provider.api(HttpMethod.POST, "/api/v1/diagrams/create.json", params, token, handler);
 	}
 
 	@Override
@@ -98,8 +104,7 @@ public class CacooUser extends AbstractUser implements CacooAPI {
 
 	@Override
 	public void deleteDiagram(String id, Handler<AsyncResult<JsonObject>> handler) {
-		// TODO Auto-generated method stub
-		
+		provider.api(HttpMethod.GET, "/api/v1/diagrams/"+id+"/delete.json", null, token, handler);
 	}
 
 	@Override
