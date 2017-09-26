@@ -20,6 +20,6 @@ public interface CacooAPI {
 	
 	void deleteDiagram(String id, Handler<AsyncResult<JsonObject>> handler);
 
-	void editDiagram(String id, Handler<AsyncResult<JsonObject>> handler);
+	void editorToken(String diagramId, Handler<AsyncResult<String>> handler);
 	
 }

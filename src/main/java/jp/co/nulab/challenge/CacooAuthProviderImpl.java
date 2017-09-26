@@ -1,10 +1,20 @@
 package jp.co.nulab.challenge;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import io.vertx.core.AsyncResult;
@@ -88,20 +98,31 @@ public class CacooAuthProviderImpl implements CacooAuthProvider {
 				switch(method) {
 					case GET: {
 						request = new HttpGet(siteUrl+path);
+						if (params != null) {
+							final HttpParams httpParams = new BasicHttpParams();
+							params.getMap().entrySet()
+								.stream()
+								.filter(e -> { return e.getValue() != null; })
+								.forEach(e -> { httpParams.setParameter(e.getKey(), e.getValue()); });
+							((HttpGet) request).setParams(httpParams);
+						}
 						break;
 					}
-//					case POST: {
-//						request = new HttpPost(siteUrl+path);
-//						break;
-//					}
-//					case DELETE: {
-//						request = new HttpDelete(siteUrl+path);
-//						break;
-//					}
-//					case PUT: {
-//						request = new HttpPut(siteUrl+path);
-//						break;
-//					}
+					case POST: {
+						request = new HttpPost(siteUrl+path);
+						if (params != null) {
+							final List<BasicNameValuePair> body = params.getMap().entrySet()
+									.stream()
+									.filter(e -> { return e.getValue() != null; })
+									.map( e -> { return new BasicNameValuePair(e.getKey(), e.getValue().toString());})
+									.collect(Collectors.toList());
+							final HttpEntity entity = new UrlEncodedFormEntity(body, StandardCharsets.UTF_8.name());
+							((HttpPost) request).setEntity(entity);
+						}
+						break;
+					}
+					case DELETE:
+					case PUT:
 					default: {
 						future.fail("Unsupported http method");
 						return;

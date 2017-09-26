@@ -10,39 +10,76 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
+	<link href="/assets/styles/app.css" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded sticky-top">
-      <div class="container">
-        <!--
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        -->
-        <a class="navbar-brand" href="#">
-          <img src="/assets/images/logo.svg" height="30" class="d-inline-block align-top" alt="Logo">
-        </a>
-        <!--
-        <div class="collapse navbar-collapse" id="mainNavbar">
-          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          </ul>
+    <header>
+      <div class="navbar navbar-dark bg-dark">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand">CacooUI</a>
         </div>
-        -->
       </div>
-    </nav>
+    </header>
     <main class="container">
-    	<pre>
-    	{{diagrams}}
-    	</pre>
-    </main>
-    <footer class="footer bg-inverse">
-      <div class="container text-center">
-        <a href="#"><span class="text-muted"><b>Cacoo Web UI</b> © 2017</span></a>
-      </div>
-    </footer>
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha256-gL1ibrbVcRIHKlCO5OXOPC/lZz/gpdApgQAzskqqXp8=" crossorigin="anonymous"></script>
+		<ul class="nav nav-tabs">
+		  <li class="nav-item">
+		    <a class="nav-link {{#if isAll}}active{{/if}}" href="/diagrams">All diagrams</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link {{#if isOwn}}active{{/if}}" href="/diagrams?type=own">Owned by Me</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link {{#if isShared}}active{{/if}}" href="/diagrams?type=shared">Shared with Me</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link {{#if isStencil}}active{{/if}}" href="/diagrams?type=stencil">Stencil</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link {{#if isTemplate}}active{{/if}}" href="/diagrams?type=template">Template</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link {{#if isRecyclebin}}active{{/if}}" href="/diagrams?type=recyclebin">Recycle Bin</a>
+		  </li>
+		</ul>    
+	  <div class="row">
+        {{#each diagrams.result}}
+  		<div class="col-4">
+			<div class="card" style="width: 20rem;">
+			  <img class="card-img-top" style="background-image: url('{{imageUrl}}');">
+			  <div class="card-body">
+			  	{{#if folderName}}
+			  	<span class="badge badge-info">{{folderName}}</span>
+			  	{{/if}}
+			    <h4 class="card-title">{{title}}</h4>
+			    <!-- <p class="card-text">{{description}}</p> -->
+			    <div class="d-flex justify-content-center">
+				    <a href="/diagrams/{{diagramId}}/edit" class="btn btn-outline-dark">
+				      <span class="oi oi-pencil" title="edit" aria-hidden="true"></span>
+				    </a>
+				    <a href="#" class="btn btn-outline-dark">
+				      <span class="oi oi-move" title="move" aria-hidden="true"></span>
+				    </a>
+				    <a href="/diagrams/{{diagramId}}/copy" class="btn btn-outline-dark">
+				      <span class="oi oi-layers" title="copy" aria-hidden="true"></span>
+				    </a>
+				    <a href="#" class="btn btn-outline-dark">
+				      <span class="oi oi-trash" title="remove" aria-hidden="true"></span>
+				    </a>
+                </div>
+			  </div>
+			</div>  		
+  		</div>
+  		{{else}}
+			<div class="alert alert-secondary col-12" style="margin-top: 10px;" role="alert">
+			  No diagrams!
+			</div>
+        {{/each}}
+	  </div>    
+	</main>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   </body>
 </html>

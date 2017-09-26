@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
@@ -63,14 +64,12 @@ public class CacooUser extends AbstractUser implements CacooAPI {
 
 	@Override
 	public void getDiagram(String id, Handler<AsyncResult<JsonObject>> handler) {
-		// TODO Auto-generated method stub
-		
+		provider.api(HttpMethod.GET, "/api/v1/diagrams/"+id+".json", null, token, handler);
 	}
 
 	@Override
 	public void getFolders(Handler<AsyncResult<JsonObject>> handler) {
-		// TODO Auto-generated method stub
-		
+		provider.api(HttpMethod.GET, "/api/v1/folders.json", null, token, handler);
 	}
 
 	@Override
@@ -86,10 +85,15 @@ public class CacooUser extends AbstractUser implements CacooAPI {
 	}
 
 	@Override
-	public void copyDiagram(String originalDigramId, Integer folderId, String title, String description,
-			String security, Handler<AsyncResult<JsonObject>> handler) {
-		// TODO Auto-generated method stub
+	public void copyDiagram(String originalDigramId, Integer folderId, String title, String description, String security, Handler<AsyncResult<JsonObject>> handler) {
+		final JsonObject params = new JsonObject();
 		
+		params.put("title", title);
+		params.put("description", description);
+		params.put("security", security);
+		params.put("folderId", folderId);
+		
+		provider.api(HttpMethod.POST, "/api/v1/diagrams/"+originalDigramId+"/copy.json", params, token, handler);
 	}
 
 	@Override
@@ -99,9 +103,12 @@ public class CacooUser extends AbstractUser implements CacooAPI {
 	}
 
 	@Override
-	public void editDiagram(String id, Handler<AsyncResult<JsonObject>> handler) {
-		// TODO Auto-generated method stub
-		
+	public void editorToken(String diagramId, Handler<AsyncResult<String>> handler) {
+		final Future<JsonObject> future = Future.future();
+		provider.api(HttpMethod.GET, "/api/v1/diagrams/"+diagramId+"/editor/token.json", null, token, future.completer());
+		future
+			.map(json -> { return json.getString("token"); })
+			.setHandler(handler);
 	}
 
 }

@@ -48,7 +48,7 @@ eclipse {
 }
 
 run {
-  args = [ 'run', mainVerticle, "--redeploy=${watchForChange}", "--on-redeploy=${doOnChange}", "--launcher-class=${mainClassName}" ]
+  args = [ 'run', mainVerticle, "--redeploy=${watchForChange}", "--on-redeploy=${doOnChange}", "--launcher-class=${mainClassName}", "--conf=${projectDir}/etc/config.json" ]
 }
 
 

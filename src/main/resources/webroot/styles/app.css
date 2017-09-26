@@ -1,0 +1,14 @@
+main.container {
+  padding-top: 10px;
+}
+
+.card {
+  margin-top: 15px;
+}
+
+.card-img-top {
+  height: 180px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

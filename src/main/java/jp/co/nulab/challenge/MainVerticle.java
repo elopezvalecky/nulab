@@ -17,6 +17,9 @@ public class MainVerticle extends AbstractVerticle {
 		
 		final DeploymentOptions opts = new DeploymentOptions();
 		opts.setConfig(config().getJsonObject("http", new JsonObject()));
+		opts.getConfig()
+			.put("consumer.key", config().getString("cacoo.consumer.key"))
+			.put("consumer.secret", config().getString("cacoo.consumer.secret"));
 		
 		vertx.deployVerticle(new HttpServerVerticle(), opts, result -> {});
 		
